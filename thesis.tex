@@ -1,0 +1,202 @@
+% Last updated at 2024/12/10 09:39:36
+\documentclass[12pt,a4j]{ltjsreport}
+\usepackage{ltklthesis}
+\usepackage{multirow}
+
+\begin{document}
+
+\type{B} %卒論はB，修論はM
+\author{山形隼士}
+\id{2503} %学籍番号
+\fyear{2025} %修了・卒業年(修了・卒業式が2025年3月なら2025)
+\title{審判ジェスチャに着目した\\バスケットボールシュート種類\\判別手法}
+\abstract{
+こんにちは，アブストラクトです
+}
+
+\maketitle
+
+\chapter{はじめに}
+近年，スポーツアナリティクスの分野は著しい発展を遂げており，バスケットボール競技においても，各選手のパフォーマンスを詳細に表すスタッツと呼ばれるデータを用いた戦術分析や選手評価が一般化している．これらの指標は，シュート成功率，リバウンド数，アシスト数などの定量的データに基づいており，チームの勝利に直結する重要な要素となる．
+一方で，現状のスタッツ収集は主に人力で行われている点や，収集に用いるアプリケーションが競技カテゴリごとに異なり統一されていないなどの課題がある．そのため，スタッツ収集のプロセスを自動化する必要性が高まっている．
+この点に関して，Versnikら [3] は試合映像を入力とし，物体検出や追跡技術を用いてスタッツを自動生成するシステムを提案している．しかし，映像内の選手位置情報のみから，2ポイントシュートか3ポイントシュートかというシュートの種類を判定する手法には技術的な限界が存在する．具体的には，足元の位置検出における微小な誤差や，カメラアングルによる射影変換の歪み，あるいはディフェンス選手によるオクルージョンが発生し，物体検出での未検出が起こった場合，3ポイントライン際での判定精度が著しく低下するという課題がある．
+この課題に対し，本研究では審判の情報に着目する．バスケットボールの審判は，シュートが放たれた際，その放たれた位置や状況に応じて，2ポイントあるいは3ポイントを示す特定のハンドジェスチャを行う規定がある．すなわち，審判の動作は，シュートの種類を決定づける信頼性の高い視覚情報であると言える．
+以上の背景から，本研究では，従来の選手位置座標のみに依存した判定手法に加え，シュート時における審判のジェスチャ認識を導入した新たな統合判別手法を提案する．審判のジェスチャを統合することで，上記のような判定困難な状況において，シュート種類の判別精度がどの程度改善されるかを検証し，その有効性を明らかにする．
+\chapter{コンピュータビジョンを用いた\\バスケットボールの研究}
+
+\section{バスケットボール競技}
+バスケットボールは，1チーム5名のプレイヤーからなる2つのチームが，コートの両端に設置されたリング（バスケット）へボールを投じ，その通過数によって得点を競う球技である ．コート上には計10名の選手が存在し，攻守を激しく入れ替えながら試合が展開される ．
+
+攻撃側の選手がリングに向けてボールを投じる動作を「シュート」と呼び，その動作を行う選手を「シューター」と呼ぶ ．得点の種類はシュートが放たれた位置によって厳密に区分されており，その基準となるのがゴールの中心から6.75m離れた位置に描かれた「3ポイントライン」である ．図1にバスケットボールのコート図を示す ．このラインを境界として，ラインの内側（2ポイントエリア）から放たれたシュートは「2ポイントシュート」，外側（3ポイントエリア）から放たれたシュートは「3ポイントシュート」と定義される ．
+\begin{figure}[htbp]
+  \centering
+  \setlength{\belowcaptionskip}{-0.7em}
+
+  % 画像ファイルの幅を、本文の幅の80%に設定（数字を変えて調整可能）
+  \includegraphics[width=0.8\linewidth]{image/court.pdf}
+  
+  \caption{バスケットボールコートの図}
+  \label{fig:shoot_gesture}
+\end{figure}
+
+試合の判定および進行管理は，最大3名の審判員（レフェリー）によって行われる ．審判は，ファウルやバイオレーションなどの反則行為に対する判定だけでなく，試合中に発生するあらゆる事象に対して規定のハンドジェスチャを用いて視覚的に伝達を行う役割を担う ．特に，本研究で着目するシュート動作に関しては，シュートが放たれた瞬間にその試行が2ポイントであるか3ポイントであるかを明確にするため，審判はそれぞれに対応した異なるジェスチャを提示する規定となっている ．図2にシュートにおける審判のジェスチャを示す ．
+
+\begin{figure}[htbp]
+  \centering
+  \setlength{\belowcaptionskip}{-0.7em}
+  % 高さを揃えるために共通の高さを指定
+  \newlength{\imgheight}
+  \setlength{\imgheight}{4.0cm} % ← 縮小 (もともと4cm)
+  
+  % --- 左側の画像 ---
+  \begin{minipage}[t]{0.30\linewidth} 
+    \centering
+    \raisebox{3mm}{\includegraphics[height=\imgheight]{image/2pt.pdf}}
+  \end{minipage}
+  \hspace{0.5em} % ← 画像の間隔を微調整
+  % --- 右側の画像 ---
+  \begin{minipage}[t]{0.30\linewidth}
+    \centering
+    \includegraphics[height=\imgheight]{image/3pt.pdf}
+    % \label{fig:3pt} % 同上
+  \end{minipage}
+  
+  \caption{2ポイントシュート（左）および3ポイントシュート（右）のジェスチャ}
+  \label{fig:shoot_gesture}
+\end{figure}
+
+
+また，現代のバスケットボール競技においては，試合の勝敗だけでなく，各選手の貢献度やパフォーマンスを詳細に可視化するために「スタッツ（Stats）」と呼ばれるデータが重要視されている．スタッツとは，その選手が何本シュートを決めたか，何回反則を犯したかなどの詳細なプレイ記録の総称である ．図2.3にスタッツの例を示す．表中の数値は選手の成績を表しており，例えば図中の「MIN」の個所は出場時間，「A（Attempted）」の箇所はシュートを打った数，「M（Made）」の箇所はシュートを決めた数を示している ．現状，これらのスタッツ収集は，専門の記録員がシステムを用いて行っており，依然として人の目視による判断と手動入力に依存している．
+
+\begin{figure}[htbp]
+  \centering
+  \setlength{\belowcaptionskip}{-0.7em}
+
+  % 画像ファイルの幅を、本文の幅の80%に設定（数字を変えて調整可能）
+  \includegraphics[width=1.0\linewidth]{image/stats.pdf}
+  
+  \caption{スタッツの例}
+  \label{fig:stats}
+\end{figure}
+
+\section{関連研究}
+
+\section{研究の目的}
+
+
+\chapter{審判のジェスチャを利用した\\シュート種類判別法}
+
+設計方針（目的達成に必要な機能の一覧），全体構成と各モジュールの役割や関係，各モジュールの詳細，システムの利用例，について書く．モジュールの説明においては，入力と出力を明確にすること．自分がやったことを書く．
+
+\chapter{評価}
+
+評価の目的，方法，結果，考察（研究の目的がどこまで達成できたのかについて），今後の課題について書く．
+実験結果はグラフや表にまとめる．
+実験結果に関しては必要に応じて，統計的検定を行う．
+考察に関してはその根拠となる実験結果を示すこと．
+
+\chapter{まとめ}
+
+研究の目的と結果を簡潔に書く．
+今後の課題に関して簡潔に書く．
+
+\appendix
+\chapter{Latexの書き方}
+
+\section{図の挿入}
+図\ref{fig:sample_eps}，図\ref{fig:sample_pdf}，図\ref{fig:sample_svg}のように，図を挿入するときは必ずfigure環境を用い，label, captionをつけること．
+図は必ず本文中で引用し，説明を加えること．図はeps, pdf, またはsvg形式にすること．
+パワポで図を書く場合は，InkScapeに図をコピペし，eps, pdf, またはsvg形式で保存すること．
+
+\begin{figure}[htbp]
+  \begin{center}
+
+    % \includegraphics[width=6cm]{image/sample.eps}
+    \caption{サンプル(eps形式)}
+    \label{fig:sample_eps}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+    % 画像ファイルがないためコメントアウト中
+    % \includegraphics[width=6cm]{image/sample.pdf}
+    \caption{サンプル(pdf形式)}
+    \label{fig:sample_pdf}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+    % 画像ファイルがないためコメントアウト中
+    % \includesvg[width=6cm]{image/sample.svg}
+    \caption{サンプル(svg形式)}
+    \label{fig:sample_svg}
+  \end{center}
+\end{figure}
+
+\section{表の挿入}
+表\ref{tbl:q1_macro}のように，表を挿入するときは必ずtable環境を用い，label, captionをつけること．
+表は必ず本文中で引用し，説明を加えること．
+
+\begin{table}[htbp]
+  \caption{クラスタ数と選択肢の割合}
+  \label{tbl:q1_macro}
+  \begin{center}
+    \begin{tabular}{lrrrrr}
+      \hline
+      \multirow{2}{*}{クラスタ数} & \multicolumn{4}{c}{結果 } & \multirow{2}{*}{計}                         \\
+                                  & 当然                      & おもしろい          & 無意味 & 無回答 &     \\ \hline
+      1（10例）                   & 189                       & 233                 & 46     & 2      & 470 \\
+      2（8例）                    & 110                       & 219                 & 43     & 4      & 376 \\
+      3（2例）                    & 22                        & 60                  & 12     & 0      & 94  \\ \hline
+      計                          & 321                       & 512                 & 101    & 6      & 940 \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\section{コードの挿入}
+Code~\ref{program1}のように，ソースコードを挿入する場合はlstlisting環境を使い，label, captionをつけること．
+
+\begin{minipage}{14cm}
+  \begin{lstlisting}[caption=Pythonのソースコード,label=program1]
+import time
+
+def main():
+time.sleep(5)  # スリープします
+print("ok")
+
+# testtest
+if __name__ == "__main__":
+main()
+\end{lstlisting}
+\end{minipage}
+
+Code~\ref{program2}のように，ソースコードをファイルから挿入する場合はlstinputlisting環境を使う．
+
+\begin{minipage}{14cm}
+  % 外部ファイルがないためコメントアウト中
+  % \lstinputlisting[caption = Pythonのソースコード2 ,label = program2]{code/sample.py}
+\end{minipage}
+
+\section{参考文献}
+参考文献はbibtexを使って最後に書く．
+参考文献は以下のように引用する．
+書籍は\cite{latex}，論文は\cite{高橋12}，国際会議論文は\cite{Nakanishi16}, 研究会報告は\cite{岡本22}, 学会全国大会発表は\cite{芦田21}, 卒業論文は\cite{増田19}, Webページは\cite{北村研究室}のように書く．
+
+\acknowledgement %謝辞
+
+本研究を進めるにあたり，終始ご指導下さったXX教授に深く感謝いたします．
+
+また，音声認識に関して協力していただいた知能機械工学課程YY教授に厚くお礼申し上げます．
+ほかに協力してもらった人も書いておく．
+
+北村研究室の同輩諸氏には，
+日頃から多くのご助言やご支援をいただき，大変感謝しています．
+
+最後に，4年間大学に通わせてくれた両親に，心から感謝しています．
+
+% bibファイルがないためコメントアウト中
+\reference{sample} %bibファイル名を指定
+
+\end{document}

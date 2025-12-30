@@ -1,0 +1,11 @@
+# LaTeXの中間ファイルを無視
+*.aux
+*.bbl
+*.blg
+*.fls
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.dvi
