@@ -15,5 +15,6 @@
 \contentsline {figure}{\numberline {3.9}{\ignorespaces 3ポイントのジェスチャ}}{19}{figure.3.9}%
 \contentsline {figure}{\numberline {3.10}{\ignorespaces 3ポイントと判別するフレーム（腕が挙がっている状態）}}{20}{figure.3.10}%
 \contentsline {figure}{\numberline {3.11}{\ignorespaces 2ポイントと判別するフレーム（腕が挙がっていない状態）}}{20}{figure.3.11}%
+\contentsline {figure}{\numberline {3.12}{\ignorespaces 位置推定手法において未検出となるフレームの例}}{22}{figure.3.12}%
 \addvspace {10\jsc@mpt }
 \addvspace {10\jsc@mpt }
