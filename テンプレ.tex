@@ -1,0 +1,217 @@
+% Last updated at 2026/01/12 13:43:01
+\documentclass[12pt,a4j]{ltjsreport}
+\usepackage{ltklthesis}
+
+\begin{document}
+
+\type{B} %卒論はB，修論はM
+\author{北村 泰彦}
+\id{12345678} %学籍番号
+\gyear{2026} %修了・卒業年(修了・卒業式が2025年3月なら2025)
+\title{論文の書き方\\(タイトルに改行をいれる場合は\\単語の途中にいれない)}
+\abstract{
+  従来の研究，目的，手法，結果を簡潔に書く．
+  500字以内に収めること．
+  図表は入れない．参考文献は参照しない．
+}
+
+\maketitle
+
+\chapter{はじめに}
+
+研究分野（研究背景，関連研究），研究目的，研究方法，評価の方法，論文構成を簡潔に書く．研究分野には，研究背景として社会的な意義（どう世の中の役に立つ研究なのか？），関連研究の概要について書く．論文タイトルに含まれるキーワードに関する説明は必要である．節に分けない．図表は入れない．過去形ではなく現在形で書く．標準的に1～2ページ程度．
+
+論文執筆を始める前に，「論文の書き方」の資料に目を通すこと．
+
+文章の添削をChatGPTなどの生成AIに依頼することも有用である．
+
+\chapter{研究分野を表す適切なタイトル}
+研究分野に関して，他人がやったこと書く．
+
+\section{研究分野を表すタイトル}
+
+研究分野における問題の定義，専門用語の説明．
+
+\section{要素技術}
+
+要素技術の説明．3章で書いてもよい．
+
+\section{関連研究}
+
+従来の研究と課題．
+
+\subsection{関連研究1}
+
+\subsection{関連研究2}
+
+\section{本研究の目的}
+
+関連研究の課題への対応する研究目的に関して詳しく書く．
+
+
+\chapter{研究目的を表す適切なタイトル}
+
+手法やアルゴリズムを開発するのであれば，その処理の手順を示す．各処理の詳細を書く．具体例を示す．
+
+システムを開発する場合は，設計方針（目的達成に必要な機能の一覧），全体構成と各モジュールの役割や関係，各モジュールの詳細，システムの利用例，について書く．モジュールの説明においては，入力と出力を明確にすること．
+
+自分がやったことを書く．
+
+\section{設計方針}
+
+\section{全体構成}
+
+\section{モジュール1の詳細}
+
+\section{モジュール2の詳細}
+
+\section{システムの利用例}
+
+
+\chapter{評価}
+
+評価の目的，方法，結果，考察（研究の目的がどこまで達成できたのかについて），今後の課題について書く．
+実験結果はグラフや表にまとめる．
+実験結果に関しては必要に応じて，統計的検定を行う．
+考察に関してはその根拠となる実験結果を示すこと．
+
+\section{評価の目的}
+\section{評価の方法}
+\section{評価の結果} 
+\section{考察}
+\section{今後の課題}
+
+\chapter{まとめ}
+
+研究の目的と結果を簡潔に書く．
+今後の課題に関して簡潔に書く．
+
+\appendix
+\chapter{LaTexの書き方}
+
+\section{図の挿入}
+図\ref{fig:sample_eps}，図\ref{fig:sample_pdf}，図\ref{fig:sample_svg}のように，図を挿入するときは必ずfigure環境を用い，label, captionをつけること．
+図は必ず本文中で引用し，説明を加えること．図はeps, pdf, またはsvg形式にすること．
+パワポで図を書く場合は，InkScapeに図をコピペし，eps, pdf, またはsvg形式で保存すること．
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=6cm]{image/sample.eps}
+    \caption{サンプル(eps形式)}
+    \label{fig:sample_eps}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=6cm]{image/sample.pdf}
+    \caption{サンプル(pdf形式)}
+    \label{fig:sample_pdf}
+  \end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includesvg[width=6cm]{image/sample.svg}
+    \caption{サンプル(svg形式)}
+    \label{fig:sample_svg}
+  \end{center}
+\end{figure}
+
+\section{表の挿入}
+表\ref{tbl:q1_macro}のように，表を挿入するときは必ずtable環境を用い，label, captionをつけること．
+表は必ず本文中で引用し，説明を加えること．
+
+\begin{table}[htbp]
+  \caption{クラスタ数と選択肢の割合}
+  \label{tbl:q1_macro}
+  \begin{center}
+    \begin{tabular}{lrrrrr}
+      \hline
+      \multirow{2}{*}{クラスタ数} & \multicolumn{4}{c}{結果 } & \multirow{2}{*}{計}                   \\
+                             & 当然                      & おもしろい              & 無意味 & 無回答 &     \\ \hline
+      1（10例）                 & 189                     & 233                & 46  & 2   & 470 \\
+      2（8例）                  & 110                     & 219                & 43  & 4   & 376 \\
+      3（2例）                  & 22                      & 60                 & 12  & 0   & 94  \\ \hline
+      計                      & 321                     & 512                & 101 & 6   & 940 \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+ChatGPTを活用すると図\ref{fig:table_png}のような画像形式の表を表\ref{tbl:table_tex}のようなLaTeX形式の表に変換してくれる．ただし，誤りも含まれるので適宜，修正が必要である．
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[width=10cm]{image/table.png}
+    \caption{画像の表(png形式)}
+    \label{fig:table_png}
+  \end{center}
+\end{figure}
+
+\begin{table}[h]
+  \centering
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    \multicolumn{2}{|c|}{腕を使った技} & 脚を使った技             \\ \hline
+    拳を使った技                       & 拳以外を使った技 &         \\ \hline
+    中段突き                         & 肘打ち      & 前蹴り上げ   \\ \hline
+    上段突き                         & 肘打ち上げ    & 内回し蹴り   \\ \hline
+    裏拳左右打ち                       & 肘打ち下し    & 外回し蹴り   \\ \hline
+    裏拳正面打ち                       & 手刀鎌面打ち   & 中段前蹴り   \\ \hline
+    裏拳回し打ち                       & 手刀鎌骨打ち込み & 金的蹴り    \\ \hline
+    正拳顔打ち                        & 手刀内打ち    & 足刀横蹴り   \\ \hline
+    上段受け                         & 手刀腱横打ち   & 足刀横蹴り上げ \\ \hline
+    外受け                          &          & 膝蹴り     \\ \hline
+    下段払い                         &          & 後ろ蹴り    \\ \hline
+    円形逆突き                        &          & 上段回し蹴り  \\ \hline
+    内突き                          &          &         \\ \hline
+    内突き下段払い                      &          &         \\ \hline
+  \end{tabular}
+  \caption{腕と脚を使った技の分類}
+  \label{tbl:table_tex}
+\end{table}
+
+\section{コードの挿入}
+Code~\ref{program1}のように，ソースコードを挿入する場合はlstlisting環境を使い，label, captionをつけること．
+
+\begin{minipage}{14cm}
+  \begin{lstlisting}[caption=Pythonのソースコード,label=program1]
+import time
+
+def main():
+time.sleep(5)  # スリープします
+print("ok")
+
+# testtest
+if __name__ == "__main__":
+main()
+\end{lstlisting}
+\end{minipage}
+
+Code~\ref{program2}のように，ソースコードをファイルから挿入する場合はlstinputlisting環境を使う．
+
+\begin{minipage}{14cm}
+  \lstinputlisting[caption = Pythonのソースコード2 ,label = program2]{code/sample.py}
+\end{minipage}
+
+\section{参考文献}
+参考文献はbibtexを使って最後に書く．
+参考文献は以下のように本文中で引用する．
+書籍は\cite{latex}，論文は\cite{高橋12}，国際会議論文は\cite{Nakanishi16}, 研究会報告は\cite{岡本22}, 学会全国大会発表は\cite{芦田21}, 卒業論文は\cite{増田19}, Webページは\cite{北村研究室}のように書く．
+
+\acknowledgement %謝辞
+
+本研究を進めるにあたり，終始ご指導下さったXX教授に深く感謝いたします．
+
+また，音声認識に関して協力していただいた知能機械工学課程YY教授に厚くお礼申し上げます．
+ほかに協力してもらった人も書いておく．
+
+北村研究室の同輩諸氏には，
+日頃から多くのご助言やご支援をいただき，大変感謝しています．
+
+最後に，4年間大学に通わせてくれた両親に，心から感謝しています．
+
+\reference{sample} %bibファイル名を指定
+
+\end{document}
